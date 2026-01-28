@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Kopi Kenangan Senja</title>
+    
+    <!-- Mengambil Font dari Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Ikon dari FontAwesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CSS Reset & Variables --- */
+        :root {
+            --color-primary: #4B3621; /* Coffee Brown */
+            --color-secondary: #D2B48C; /* Tan/Cream */
+            --color-accent: #FF8C00; /* Sunset Orange */
+            --color-bg-dark: #2C241B; /* Dark Coffee/Blackish */
+            --color-text-main: #3E2723;
+            --color-text-light: #F5F5DC;
+            --color-white: #ffffff;
+            --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.5);
+            --transition-smooth: all 0.3s ease-in-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg-dark);
+            /* Background Ilustrasi Kedai Kopi Senja (Placeholder Picsum) */
+            background: linear-gradient(rgba(44, 36, 27, 0.85), rgba(44, 36, 27, 0.9)), 
+                        url('https://picsum.photos/seed/coffeeShop/1920/1080.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- Container & Card --- */
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            perspective: 1000px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            border-top: 5px solid var(--color-accent);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUpFade 0.8s ease-out forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideUpFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Header Section --- */
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .app-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .app-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Form Section --- */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--color-text-main);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+            outline: none;
+            background-color: #fafafa;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-secondary);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(210, 180, 140, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            transition: var(--transition-smooth);
+        }
+
+        .form-input:focus + .input-icon {
+            color: var(--color-primary);
+        }
+
+        /* Password Toggle */
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-password:hover {
+            color: var(--color-primary);
+        }
+
+        /* Validation Message */
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.75rem;
+            margin-top: 5px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .form-group.error .form-input {
+            border-color: #e74c3c;
+        }
+        
+        .form-group.error .error-message {
+            display: flex;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(75, 54, 33, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #3e2d1d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(75, 54, 33, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-google {
+            background-color: #fff;
+            color: var(--color-text-main);
+            border: 2px solid #eee;
+            margin-top: 15px;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f8f8;
+            border-color: #ddd;
+        }
+
+        /* --- Links --- */
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        .link {
+            text-decoration: none;
+            color: var(--color-text-main);
+            transition: var(--transition-smooth);
+        }
+
+        .link:hover {
+            color: var(--color-accent);
+            text-decoration: underline;
+        }
+
+        .divider {
+            margin: 25px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background-color: #eee;
+        }
+
+        .divider span {
+            background: #fff;
+            padding: 0 10px;
+            color: #999;
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Footer --- */
+        .card-footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .card-footer strong {
+            color: var(--color-primary);
+        }
+
+        /* --- Toast Notification --- */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(200%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1000;
+            border-left: 5px solid;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success { border-color: #2ecc71; }
+        .toast.error { border-color: #e74c3c; }
+
+        .toast i { font-size: 1.2rem; }
+        .toast.success i { color: #2ecc71; }
+        .toast.error i { color: #e74c3c; }
+
+        /* --- Responsive Mobile --- */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .app-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="card-header">
+                <i class="fas fa-mug-hot logo-icon"></i>
+                <h1 class="app-title">Kopi Kenangan Senja</h1>
+                <p class="app-subtitle">Nikmati Kenangan dalam Setiap Tegukan</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" novalidate>
+                
+                <!-- Email Input -->
+                <div class="form-group" id="emailGroup">
+                    <label for="email" class="form-label">Email atau Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="email" class="form-input" placeholder="contoh: pelanggan@kopi.com" autocomplete="off">
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> <span>Email tidak boleh kosong</span>
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="form-group" id="passwordGroup">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" class="form-input" placeholder="Masukkan password Anda">
+                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
+                    </div>
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> <span>Password minimal 6 karakter</span>
+                    </div>
+                </div>
+
+                <!-- Links (Forgot Pass) -->
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="#" class="link" style="font-size: 0.8rem;">Lupa password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+
+                <div class="divider">
+                    <span>atau masuk dengan</span>
+                </div>
+
+                <!-- Google Login Button -->
+                <button type="button" class="btn btn-google">
+                    <i class="fab fa-google" style="color: #DB4437;"></i> Google
+                </button>
+            </form>
+
+            <!-- Register Link -->
+            <div class="links" style="justify-content: center; margin-top: 25px;">
+                <span style="color: #666;">Belum punya akun?</span>
+                <a href="#" class="link" style="font-weight: 600; color: var(--color-accent);">Daftar sekarang</a>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer">
+                <p>&copy; 2026 <strong>Kopi Kenangan Senja</strong>. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Element -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <div class="toast-content">
+            <h4 style="margin:0; font-size: 0.95rem;">Notifikasi</h4>
+            <p style="margin:0; font-size: 0.8rem; color: #666;" id="toastMessage">Berhasil login!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const emailGroup = document.getElementById('emailGroup');
+            const passwordGroup = document.getElementById('passwordGroup');
+            
+            // --- Fitur Show/Hide Password ---
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Ubah Icon
+                togglePassword.classList.toggle('fa-eye');
+                togglePassword.classList.toggle('fa-eye-slash');
+            });
+
+            // --- Hapus Error saat mengetik ---
+            const clearError = (input, group) => {
+                input.addEventListener('input', () => {
+                    group.classList.remove('error');
+                });
+            };
+            clearError(emailInput, emailGroup);
+            clearError(passwordInput, passwordGroup);
+
+            // --- Validasi & Submit Form ---
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+
+                // Validasi Email
+                const emailValue = emailInput.value.trim();
+                if (emailValue === '') {
+                    emailGroup.classList.add('error');
+                    emailGroup.querySelector('.error-message span').textContent = 'Email tidak boleh kosong';
+                    isValid = false;
+                } else if (!isValidEmail(emailValue)) {
+                    emailGroup.classList.add('error');
+                    emailGroup.querySelector('.error-message span').textContent = 'Format email tidak valid';
+                    isValid = false;
+                }
+
+                // Validasi Password
+                const passwordValue = passwordInput.value.trim();
+                if (passwordValue === '') {
+                    passwordGroup.classList.add('error');
+                    passwordGroup.querySelector('.error-message span').textContent = 'Password tidak boleh kosong';
+                    isValid = false;
+                } else if (passwordValue.length < 6) {
+                    passwordGroup.classList.add('error');
+                    passwordGroup.querySelector('.error-message span').textContent = 'Password minimal 6 karakter';
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Simulasi Login Sukses
+                    const btn = loginForm.querySelector('.btn-primary');
+                    const originalText = btn.innerHTML;
+                    
+                    // Efek Loading
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memuat...';
+                    btn.disabled = true;
+                    btn.style.opacity = '0.7';
+
+                    setTimeout(() => {
+                        showToast('Login berhasil! Selamat datang.', 'success');
+
+                        // Redirect ke halaman dashboard setelah 1 detik
+                        setTimeout(() => {
+                            window.location.href = "home.html"; // ganti sesuai halaman kamu
+                        }, 1000);
+
+                    }, 2000);
+
+                } else {
+                    // Efek getar jika error (opsional)
+                    const card = document.querySelector('.login-card');
+                    card.style.transform = 'translateX(5px)';
+                    setTimeout(() => card.style.transform = 'translateX(0)', 100);
+                    setTimeout(() => card.style.transform = 'translateX(-5px)', 200);
+                    setTimeout(() => card.style.transform = 'translateX(0)', 300);
+                }
+            });
+
+            // Fungsi Helper Validasi Email Sederhana
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // --- Fungsi Toast Notification ---
+            function showToast(message, type) {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toastMessage');
+                const icon = toast.querySelector('i');
+
+                toastMessage.textContent = message;
+                
+                // Set style berdasarkan tipe
+                toast.className = 'toast show ' + type;
+                icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+
+                // Sembunyikan setelah 3 detik
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
